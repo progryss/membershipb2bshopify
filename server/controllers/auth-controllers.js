@@ -654,67 +654,67 @@ const deleteCompany = async (req, res) => {
         const enquiryId = req.params.id;
 
         // Find the company document by its ID in MongoDB
-        const companyDoc = await createCompanyDb.findById(enquiryId);
+        // const companyDoc = await createCompanyDb.findById(enquiryId);
 
-        if (!companyDoc) {
-            return res.status(404).send('Company not found');
-        }
+        // if (!companyDoc) {
+        //     return res.status(404).send('Company not found');
+        // }
 
-        let shopifyCompanyId = companyDoc.companyId;
+        // let shopifyCompanyId = companyDoc.companyId;
 
-        if (!shopifyCompanyId) {
-            return res.status(400).send('Shopify company ID not found in company document');
-        }
+        // if (!shopifyCompanyId) {
+        //     return res.status(400).send('Shopify company ID not found in company document');
+        // }
 
-        // Ensure shopifyCompanyId is in the correct format (gid://shopify/Company/{id})
-        if (!shopifyCompanyId.startsWith('gid://')) {
-            shopifyCompanyId = `gid://shopify/Company/${shopifyCompanyId}`;
-        }
+
+        // if (!shopifyCompanyId.startsWith('gid://')) {
+        //     shopifyCompanyId = `gid://shopify/Company/${shopifyCompanyId}`;
+        // }
 
         // Define the GraphQL mutation for deleting a company in Shopify
-        const query = `
-            mutation companyDelete($id: ID!) {
-                companyDelete(id: $id) {
-                    deletedCompanyId
-                    userErrors {
-                        field
-                        message
-                    }
-                }
-            }`;
+        // const query = `
+        //     mutation companyDelete($id: ID!) {
+        //         companyDelete(id: $id) {
+        //             deletedCompanyId
+        //             userErrors {
+        //                 field
+        //                 message
+        //             }
+        //         }
+        //     }`;
 
-        const variables = {
-            id: shopifyCompanyId
-        };
+        // const variables = {
+        //     id: shopifyCompanyId
+        // };
 
         // Set up headers for the Shopify API request
-        const headers = {
-            'Content-Type': 'application/json',
-            'X-Shopify-Access-Token': accessToken
-        };
+        // const headers = {
+        //     'Content-Type': 'application/json',
+        //     'X-Shopify-Access-Token': accessToken
+        // };
 
         // Make the API call to Shopify to delete the company
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({ query, variables })
-        });
+        // const response = await fetch(url, {
+        //     method: 'POST',
+        //     headers: headers,
+        //     body: JSON.stringify({ query, variables })
+        // });
 
-        if (!response.ok) {
-            throw new Error(`Failed to delete company from Shopify: ${response.statusText}`);
-        }
+        // if (!response.ok) {
+        //     throw new Error(`Failed to delete company from Shopify: ${response.statusText}`);
+        // }
 
-        const data = await response.json();
+        // const data = await response.json();
 
         // Handle any errors returned by Shopify
-        if (data.errors && data.errors.length > 0) {
-            throw new Error(data.errors.map(e => e.message).join(', '));
-        }
+        // if (data.errors && data.errors.length > 0) {
+        //     throw new Error(data.errors.map(e => e.message).join(', '));
+        // }
 
-        if (data.data.companyDelete.userErrors && data.data.companyDelete.userErrors.length > 0) {
-            const errorMessages = data.data.companyDelete.userErrors.map(e => e.message).join(', ');
-            throw new Error(`Shopify error(s): ${errorMessages}`);
-        }
+        // if (data.data.companyDelete.userErrors && data.data.companyDelete.userErrors.length > 0) {
+        //     const errorMessages = data.data.companyDelete.userErrors.map(e => e.message).join(', ');
+        //     throw new Error(`Shopify error(s): ${errorMessages}`);
+        // }
 
         // After successful deletion from Shopify, delete the company from MongoDB
         await createCompanyDb.findByIdAndDelete(enquiryId);
@@ -728,7 +728,7 @@ const deleteCompany = async (req, res) => {
 
 const userRegister = async (req, res) => {
     try {
-        const existingUser = await User.findOne({ name: req.body.name });
+        const existingUser = await User.findOne({ email: req.body.email });
         if (existingUser) {
             return res.status(409).send("User already exists");
         }
@@ -759,7 +759,7 @@ const userLogin = async (req, res) => {
                     expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
                     httpOnly: true,
                     sameSite: "Lax",
-                    secure: false
+                    secure: true
                 });
                 return res.status(200).send({ userValid })
             }

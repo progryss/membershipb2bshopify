@@ -57,15 +57,15 @@ function Member() {
   };
 
   const serverUrl = process.env.REACT_APP_SERVER_URL || 'http://localhost:5000';
-  const token = localStorage.getItem('token');
 
   useEffect(() => {
     function hit() {
       fetch(`${serverUrl}/api/get-users`, {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${token}`
-        }
+          "Content-Type":'application/json'
+        },
+        credentials: 'include'
       })
         .then(response => response?.json())
         .then(data => {
@@ -196,19 +196,6 @@ function Member() {
   const currentRows = filteredResults?.slice(indexOfFirstRow, indexOfLastRow);
   const totalPages = Math.ceil(filteredResults.length / rowsPerPage);
 
-  // const handlePrevPage = () => {
-  //   if (currentPage > 1) {
-  //     setCurrentPage(currentPage - 1);
-  //     window.scrollTo({ top: tableHeaderRef.current.offsetTop, behavior: 'smooth' });
-  //   }
-  // };
-
-  // const handleNextPage = () => {
-  //   if (currentPage < totalPages) {
-  //     setCurrentPage(currentPage + 1);
-  //     window.scrollTo({ top: tableHeaderRef.current.offsetTop, behavior: 'smooth' });
-  //   }
-  // };
   const handlePrevPage = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
     window.scrollTo({

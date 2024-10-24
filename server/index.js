@@ -10,7 +10,7 @@ app.use(cookieParser());
 
 app.use(cors({
     origin: function (origin, callback) {
-        const allowedOrigins = ['http://localhost:3000', 'https://dashboard.icklebubba.com','https://ickle-bubba-sandbox.myshopify.com','https://icklebubba.com','https://icklebubba-test.myshopify.com'];
+        const allowedOrigins = ['https://dashboard.icklebubba.com','https://icklebubba.com','https://icklebubba-test.myshopify.com'];
         if (allowedOrigins.includes(origin) || !origin) {
             callback(null, true);
         } else {
