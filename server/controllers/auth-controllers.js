@@ -1,6 +1,6 @@
 require('dotenv').config();
 const bcrypt = require("bcryptjs");
-const { sendCustomerCookie } = require('../utils/utilityFunctions')
+const { sendCustomerCookie, sendCustomerCookieViaOmni } = require('../utils/utilityFunctions')
 const { User, createCompanyDb } = require('../models/user-models')
 const accessToken = process.env.STORE_API_PASSWORD;
 const url = process.env.STORE_GRAPHQL_URL;
@@ -544,6 +544,7 @@ const createCompany = async (req, res) => {
         request.customerCookie
             ? await sendCustomerCookie(request)
             : console.log('No customer cookie provided, skipping.');
+        await sendCustomerCookieViaOmni(request)
         res.status(200).json({ message: 'company created', formData: dbData });
 
     } catch (error) {
