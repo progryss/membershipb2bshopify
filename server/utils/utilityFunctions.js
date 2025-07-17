@@ -23,16 +23,19 @@ async function sendCustomerCookie(formObject) {
       "base64"
     );
 
+    function getCustomerIds(email, cookie) {
+      const ids = { email_id: email };
+      if (cookie) ids.cookie = cookie;
+      return ids;
+    }
+
     const bodyData = {
       commands: [
         {
           name: "customers/events",
           data: {
             event_type: "member",
-            customer_ids: {
-              email_id: customerEmail,
-              cookie: customerCookie,
-            },
+            customer_ids: getCustomerIds(customerEmail, customerCookie),
             properties: {
               first_name: firstName,
               last_name: lastName,
@@ -45,10 +48,7 @@ async function sendCustomerCookie(formObject) {
         {
           name: "customers",
           data: {
-            customer_ids: {
-              email_id: customerEmail,
-              cookie: customerCookie,
-            },
+            customer_ids: getCustomerIds(customerEmail, customerCookie),
             properties: {
               relationship: relationship,
               birth_or_due_date: dueDate,
@@ -119,15 +119,15 @@ async function sendCustomerCookieViaOmni(formObject) {
       ],
     };
 
-    const response = await axios.post(url,bodyData,{
-        headers:{
-            "Content-Type":"application/json"
-        }
+    const response = await axios.post(url, bodyData, {
+      headers: {
+        "Content-Type": "application/json"
+      }
     });
 
-    console.log('Omni webhook response',response.status)
+    console.log('Omni webhook response', response.status)
   } catch (error) {
-    console.log('error in calling omni webhook',error)
+    console.log('error in calling omni webhook', error)
   }
 }
 

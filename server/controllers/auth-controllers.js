@@ -541,10 +541,7 @@ const createCompany = async (req, res) => {
         };
         const newEntry = new createCompanyDb(initialData);
         newEntry.save();
-        request.customerCookie
-            ? await sendCustomerCookie(request)
-            : console.log('No customer cookie provided, skipping.');
-        await sendCustomerCookieViaOmni(request)
+        await sendCustomerCookie(request)
         res.status(200).json({ message: 'company created', formData: dbData });
 
     } catch (error) {
