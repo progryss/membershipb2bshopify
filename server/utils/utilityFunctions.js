@@ -52,6 +52,7 @@ async function sendCustomerCookie(formObject) {
             properties: {
               relationship: relationship,
               birth_or_due_date: dueDate,
+              email:customerEmail
             },
           },
         },
